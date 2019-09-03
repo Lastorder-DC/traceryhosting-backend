@@ -1,9 +1,11 @@
 var git = require('git-rev-sync');
 var Raven = require('raven');
+
 Raven.config(process.env.SENTRY_DSN, {
 	environment: process.env.ENVIRONMENT_NAME,
 	release: git.long()
 }).install();
+
 
 var arg0 = process.argv[2];
 var replies = (arg0 === "replies");
@@ -551,7 +553,7 @@ async function reply_for_account(connectionPool, user_id)
 	if (last_reply == null)
 	{
 		log_line(tracery_result[0]["screen_name"], tracery_result[0]["user_id"], " last reply null, setting to 1 ");
-		last_reply = "1";
+		last_reply = 1;
 		count = 1;
 	}
 
@@ -562,7 +564,7 @@ async function reply_for_account(connectionPool, user_id)
 		log_line(tracery_result[0]["screen_name"], tracery_result[0]["user_id"], " can't fetch mentions, statusCode: " + resp.statusCode + " message:" + resp.statusMessage + " data:", data);
 	}
 		
-	if (data.length > 0)
+	if (data.length > 0 && data[0]["id"] != last_reply)
 	{
 		try
 		{
@@ -596,6 +598,10 @@ async function reply_for_account(connectionPool, user_id)
 		for (const mention of data) {
 			try
 			{
+				if(tracery_result[0]["last_reply"] == mention["id"]) {
+					log_line(tracery_result[0]["screen_name"], tracery_result[0]["user_id"], " not replying to ", mention["text"]);
+					continue;
+				}
 				log_line(tracery_result[0]["screen_name"], tracery_result[0]["user_id"], " replying to ", mention["text"]);
 	
 				var origin = _.find(reply_rules, function(origin,rule) {return new RegExp(rule).test(mention["text"]);});
@@ -623,9 +629,7 @@ async function reply_for_account(connectionPool, user_id)
 				});
 			}
 		}
-	}
-
-	
+	}	
 }
 
 

@@ -1,3 +1,5 @@
 run_bots.log
+run_bots_error.log
 node_modules/*
+*.log.gz
 .env
