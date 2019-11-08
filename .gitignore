@@ -3,3 +3,4 @@ run_bots_error.log
 node_modules/*
 *.log.gz
 .env
+run_bots_wrapper.bak
