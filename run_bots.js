@@ -248,7 +248,7 @@ async function recurse_retry(origin, tries_remaining, processedGrammar, T, resul
 			}
 		}
 		
-		if(typeof in_reply_to === 'undefined') {
+		if(typeof in_reply_to === 'undefined' || typeof in_reply_to.user === 'undefined' || typeof in_reply_to.user.screen_name === 'undefined') {
 			params = {
 				status: tweet_without_image
 			};
