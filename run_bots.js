@@ -498,7 +498,11 @@ async function reply_for_account(connectionPool, user_id) {
 		include_entities: false
 	});
 	
-	if(!resp || resp.statusCode != 200) {
+	if(!resp) {
+		log_line(tracery_result[0].screen_name, tracery_result[0].user_id, " can't fetch mentions, statusCode: (unknown) message: (unknown) data:", data);
+	}
+	
+	if(resp.statusCode != 200) {
 		log_line(tracery_result[0].screen_name, tracery_result[0].user_id, " can't fetch mentions, statusCode: " + resp.statusCode + " message:" + resp.statusMessage + " data:", data);
 	}
 	
